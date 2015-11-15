@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">Hestoric_Dresden</string>
+    <string name="app_name">Historic Dresden</string>
+    <string name="button1">Overview</string>
+    <string name="button2">Whats here ?</string>
+    <string name="button3">Map</string>
+    <string name="button4">Tours</string>
+    <string name="button5">About</string>
+    <string name="backbutton">Back to main menu</string>
 </resources>

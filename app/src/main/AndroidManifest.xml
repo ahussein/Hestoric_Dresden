@@ -15,6 +15,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ButtonNewActivity" >
+        </activity>
+        <activity android:name=".WhatsHereActivity" >
+        </activity>
+        <activity android:name=".MapActivity" >
+        </activity>
+        <activity android:name=".ToursActivity" >
+        </activity>
+        <activity android:name=".AboutActivity" >
+        </activity>
     </application>
 
 </manifest>
