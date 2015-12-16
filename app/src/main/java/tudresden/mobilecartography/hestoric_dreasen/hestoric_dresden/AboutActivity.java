@@ -15,6 +15,7 @@ public class AboutActivity extends AppCompatActivity {
         Intent about = getIntent();
 
     }
+
     public void mainmenubutton(View view) {
 
         Intent mainmenu = new Intent(this, MainActivity.class);

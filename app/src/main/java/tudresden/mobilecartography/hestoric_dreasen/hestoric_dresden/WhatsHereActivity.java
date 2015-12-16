@@ -14,6 +14,7 @@ public class WhatsHereActivity extends AppCompatActivity {
         Intent whatshere = getIntent();
 
     }
+
     public void mainmenubutton(View view) {
 
         Intent mainmenu = new Intent(this, MainActivity.class);

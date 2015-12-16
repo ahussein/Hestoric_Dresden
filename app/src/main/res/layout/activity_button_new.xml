@@ -19,7 +19,7 @@ tools:context="tudresden.mobilecartography.hestoric_dreasen.hestoric_dresden.But
 <Button
     android:layout_width="180dp"
     android:layout_height="wrap_content"
-    android:text="@string/backbutton"
+    android:text="@string/BackButton"
     android:id="@+id/backbutton"
     android:onClick="mainmenubutton"
     android:layout_alignParentBottom="true"

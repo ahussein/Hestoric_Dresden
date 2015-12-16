@@ -1,11 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
-    android:background="@color/bg">
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity"
+    android:background="@color/background"
+    android:fontFamily="sans-serif-condensed">
+
+
+    <Button
+        style="?android:attr/borderlessButtonStyle"
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button1"
+        android:textColor = "@color/text_color"
+        android:layout_centerHorizontal="true"
+        android:drawableTop="@drawable/overview"
+        android:background="#F7E1D2"
+        android:layout_marginTop="25dp"
+        android:onClick="OverviewActivity"/>
+    <Button
+        style="?android:attr/borderlessButtonStyle"
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button1"
+        android:text="@string/button2"
+        android:textColor = "@color/text_color"
+        android:layout_centerHorizontal="true"
+        android:drawableTop="@drawable/where"
+        android:background="#F7E1D2"
+        android:layout_marginTop="10dp"
+        android:onClick="WhatsHereActivity"/>
+    <Button
+        style="?android:attr/borderlessButtonStyle"
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button2"
+        android:text="@string/button3"
+        android:textColor = "@color/text_color"
+        android:layout_centerHorizontal="true"
+        android:drawableTop="@drawable/map"
+        android:background="#F7E1D2"
+        android:layout_marginTop="10dp"
+        android:onClick="MapActivity"/>
+
+    <Button
+        style="?android:attr/borderlessButtonStyle"
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button3"
+        android:text="@string/button4"
+        android:textColor = "@color/text_color"
+        android:layout_centerInParent="true"
+        android:drawableTop="@drawable/tours"
+        android:background="#F7E1D2"
+        android:layout_marginTop="10dp"
+        android:onClick="ToursActivity"/>
+
+    <Button
+        style="?android:attr/borderlessButtonStyle"
+        android:id="@+id/button5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button4"
+        android:text="@string/button5"
+        android:textColor = "@color/text_color"
+        android:layout_centerInParent="true"
+        android:drawableTop="@drawable/about"
+        android:background="#F7E1D2"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="25dp"
+        android:onClick="AboutActivity"/>
+
+
+    <!--ImageButton
+        android:layout_width= "wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton1"
+        android:layout_marginTop="30dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/overview"
+        android:background="#F7E1D2"
+        android:onClick= "OverviewActivity"/>
+
+    <ImageButton
+        android:layout_width= "wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton2"
+        android:layout_below="@+id/imageButton1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/what_is_here"
+        android:background="#F7E1D2"
+        android:onClick= "WhatsHereActivity"/>
+
+    <ImageButton
+        android:layout_width= "wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton3"
+        android:layout_below="@+id/imageButton2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/map"
+        android:background="#F7E1D2"
+        android:onClick= "MapActivity"/>
+
+    <ImageButton
+        android:layout_width= "wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton4"
+        android:layout_below="@+id/imageButton3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/tours"
+        android:background="#F7E1D2"
+        android:onClick= "ToursActivity"/>
+
+    <ImageButton
+        android:layout_width= "wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton5"
+        android:layout_below="@+id/imageButton4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/about"
+        android:background="#F7E1D2"
+        android:onClick= "AboutActivity"/>
 
     <Button
         android:layout_width="@dimen/buttonwidthmain"
@@ -74,6 +203,6 @@
         android:id="@+id/imageView"
         android:src="@drawable/mainpage"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true" /> -->
 
 </RelativeLayout>
