@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void MapActivity(View view) {
 
-        Intent map = new Intent(this, MapActivity.class);
+        Intent map = new Intent(this, MapsActivity.class);
         startActivity(map);
     }
 

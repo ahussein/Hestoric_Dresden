@@ -6,4 +6,6 @@
     <string name="button4">Tours</string>
     <string name="button5">About</string>
     <string name="BackButton">Back to main menu</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="query_hint">Church, Museum, ..</string>
 </resources>
