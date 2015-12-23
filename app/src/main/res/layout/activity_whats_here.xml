@@ -15,4 +15,6 @@ android:background="@color/bg">
     android:id="@+id/textView4"
     android:layout_alignParentTop="true"
     android:layout_centerHorizontal="true" />
+
+
 </RelativeLayout>
