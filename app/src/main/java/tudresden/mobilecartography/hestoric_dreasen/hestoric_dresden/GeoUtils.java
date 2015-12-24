@@ -6,6 +6,7 @@ import android.location.Location;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 
 /**
  * Class that contains utils functions for geo-spatial operations
@@ -31,10 +32,12 @@ public class GeoUtils {
         return source.distanceTo(dest);
     }
 
-    public static ArrayList<AttractionResult> get_nearby_attractions(Double current_lat, Double current_lng, double radius, SQLiteDatabase db_connection){
-        /**
-         * Get the nearby attraction according to the current location and the radius
-         */
+    /**
+     * Retrieves all the attractions from the database
+     * @param db_connection
+     * @return
+     */
+    public static ArrayList<Attraction> get_all_attractions(SQLiteDatabase db_connection){
         Cursor db_cursor;
         ArrayList result = new ArrayList();
         try {
@@ -47,20 +50,38 @@ public class GeoUtils {
                 attraction_info.setLng(db_cursor.getDouble(db_cursor.getColumnIndex("lng")));
                 attraction_info.setDate_of_creation(db_cursor.getString(db_cursor.getColumnIndex("time_of_creation")));
                 attraction_info.setDescription(db_cursor.getString(db_cursor.getColumnIndex("description")));
-                double distance = calculate_distance(current_lat, current_lng, attraction_info.getLat(), attraction_info.getLng());
-                if (distance <= radius){
-                    AttractionResult attr_result = new AttractionResult();
-                    attr_result.setAttr(attraction_info);
-                    attr_result.setDistance(distance);
-                    result.add(attr_result);
-                }
-                LogUtils.debug("Distance between current location and " + attraction_info.getName() + " is " + distance + " meters");
+                attraction_info.setCategory(db_cursor.getString(db_cursor.getColumnIndex("category")));
                 db_cursor.moveToNext();
+                result.add(attraction_info);
             }
         }catch(Exception e){
-            LogUtils.error("Failed to get nearby attractions. Reason: " + e.getMessage());
+            LogUtils.error("Failed to get attractions. Reason: " + e.getMessage());
         }
+        return result;
+    }
 
+    /**
+     * Get the nearby attraction according to the current location and the radius
+     * @param current_lat
+     * @param current_lng
+     * @param radius
+     * @param db_connection
+     * @return
+     */
+    public static ArrayList<AttractionResult> get_nearby_attractions(Double current_lat, Double current_lng, double radius, SQLiteDatabase db_connection){
+        ArrayList result = new ArrayList();
+        Iterator<Attraction> all_attractions = get_all_attractions(db_connection).iterator();
+        while (all_attractions.hasNext()){
+            Attraction attraction_info = all_attractions.next();
+            double distance = calculate_distance(current_lat, current_lng, attraction_info.getLat(), attraction_info.getLng());
+            if (distance <= radius){
+                AttractionResult attr_result = new AttractionResult();
+                attr_result.setAttr(attraction_info);
+                attr_result.setDistance(distance);
+                result.add(attr_result);
+            }
+            LogUtils.debug("Distance between current location and " + attraction_info.getName() + " is " + distance + " meters");
+        }
         Collections.sort(result);
         return result;
 
@@ -73,6 +94,7 @@ class Attraction {
     private double lng;
     private String date_of_creation;
     private String description;
+    private String category;
 
     public void setName(String name){
         this.name = name;
@@ -112,6 +134,14 @@ class Attraction {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
 
