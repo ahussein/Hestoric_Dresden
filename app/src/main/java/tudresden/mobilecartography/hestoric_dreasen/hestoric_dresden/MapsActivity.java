@@ -17,7 +17,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -29,7 +28,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DatabaseHelper db_helper = new DatabaseHelper(this);
     private SQLiteDatabase db_connection;
     private Cursor db_cursor;
-    private int radius = 500; // 500 meters radius
+    private double radius = 5000.0; // 500 meters radius
 
     protected void onStart() {
         mGoogleApiClient.connect();
@@ -38,14 +37,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try{
             db_helper.createDataBase();
             db_connection = db_helper.getDataBase();
-            db_cursor = db_connection.rawQuery("SELECT name FROM sqlite_master WHERE type='table';", null);
-            db_cursor.moveToFirst();
-            while (! db_cursor.isAfterLast()){
-                LogUtils.debug("Table names:");
-                LogUtils.debug(db_cursor.getString(db_cursor.getColumnIndex("name")));
-                db_cursor.moveToNext();
-            }
-
         }catch(IOException ioe){
             LogUtils.error("Failed to create database");
         }
@@ -105,10 +96,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.setMyLocationEnabled(true);
+//        mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setRotateGesturesEnabled(true);
         // Add a marker in current location and move the camera
@@ -121,46 +111,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Double current_lng = mLastLocation.getLongitude();
             LatLng currentLocation = new LatLng(current_lat, current_lng);
             // get list of nearby point of interests based on the current location
-            Iterator<ArrayList> nearby_attractions = get_nearby_attractions(current_lat, current_lng, radius).iterator();
+            Iterator<AttractionResult> nearby_attractions = GeoUtils.get_nearby_attractions(current_lat, current_lng, radius, db_connection).iterator();
             // go over the result and create markers, create a function for this later
             while (nearby_attractions.hasNext()){
-                ArrayList attraction_info = nearby_attractions.next();
-                MarkerOptions marker = new MarkerOptions().position(new LatLng((double)attraction_info.get(1), (double) attraction_info.get(2)))
-                        .title((String)attraction_info.get(0));
+                AttractionResult attraction_info = nearby_attractions.next();
+                LogUtils.debug("Attraction: " + attraction_info.getAttr().getName() + " distance: " + attraction_info.getDistance());
+                MarkerOptions marker = new MarkerOptions().position(new LatLng(attraction_info.getAttr().getLat(), attraction_info.getAttr().getLng()))
+                        .title(attraction_info.getAttr().getName());
                 mMap.addMarker(marker);
             }
             currentLocationMarker = new MarkerOptions().position(currentLocation).title("You are here!");
 //            mMap.addMarker(currentLocationMarker);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 13));
+            // move camera to the church of our lady location which will be the center of the view
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.051895, 13.741579), 15));
         }
     }
 
-    private ArrayList<ArrayList> get_nearby_attractions(Double current_lat, Double current_lng, int radius){
-        /**
-         * Get the nearby attraction according to the current location and the radius
-         */
-        ArrayList result = new ArrayList();
-        try {
-            db_cursor = db_connection.rawQuery("select * from main_data limit 10;", null);
-            db_cursor.moveToFirst();
-            while (!db_cursor.isAfterLast()) {
-                ArrayList attraction_info = new ArrayList();
-                String name = db_cursor.getString(db_cursor.getColumnIndex("name"));
-                Double lat = db_cursor.getDouble(db_cursor.getColumnIndex("lat"));
-                Double lng = db_cursor.getDouble(db_cursor.getColumnIndex("lng"));
-                attraction_info.add(name);
-                attraction_info.add(lat);
-                attraction_info.add(lng);
-                result.add(attraction_info);
-                db_cursor.moveToNext();
-            }
-        }catch(Exception e){
-            LogUtils.error("Failed to get nearby attractions. Reason: " + e.getMessage());
-        }
 
-        return result;
-
-    }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
