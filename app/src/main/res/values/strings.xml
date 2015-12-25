@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">Dresden Now And Then</string>
     <string name="button1">Overview</string>
-    <string name="button2">What is here</string>
+    <string name="button2">What is here ?</string>
     <string name="button3">Map</string>
     <string name="button4">Tours</string>
     <string name="button5">About</string>
     <string name="BackButton">Back to main menu</string>
     <string name="title_activity_maps">Map</string>
     <string name="query_hint">Church, Museum, ..</string>
+    <string name="title_activity_mapvik">Map</string>
 </resources>

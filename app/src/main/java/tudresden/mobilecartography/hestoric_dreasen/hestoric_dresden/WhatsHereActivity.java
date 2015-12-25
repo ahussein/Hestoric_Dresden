@@ -1,46 +1,123 @@
 package tudresden.mobilecartography.hestoric_dreasen.hestoric_dresden;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
 import android.app.Activity;
-import android.widget.Button;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class WhatsHereActivity extends AppCompatActivity {
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
+import android.app.ListActivity;
+import android.widget.ArrayAdapter;
 
-    // GPSTracker class
-    GPSTracker gps;
+public class WhatsHereActivity extends ListActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
+    private DatabaseHelper db_helper = new DatabaseHelper(this);
+    private SQLiteDatabase db_connection;
+    private Cursor db_cursor;
+    private double radius = 5000.0; // 500 meters radius
+    TextView latitudeField;
+    TextView longitudeField;
+
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+        // create the database connection
+        try {
+            db_helper.createDataBase();
+            db_connection = db_helper.getDataBase();
+        } catch (IOException ioe) {
+            LogUtils.error("Failed to create database");
+        }
+    }
+
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+        // destroy the connection to the db
+        db_helper.close();
+    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_whats_here);
-        Intent whatshere = getIntent();
+        // Create an instance of GoogleAPIClient.
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .addApi(AppIndex.API).build();
+        }
+    }
 
-        // create class object
-        gps = new GPSTracker(WhatsHereActivity.this);
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+            Double current_lat = mLastLocation.getLatitude();
+            Double current_lng = mLastLocation.getLongitude();
+            LatLng currentLocation = new LatLng(current_lat, current_lng);
+            // get list of nearby point of interests based on the current location
+            Iterator<AttractionResult> nearby_attractions = GeoUtils.get_nearby_attractions(current_lat, current_lng, radius, db_connection).iterator();
+            // go over the result and create markers, create a function for this later
+            int n = 0;
+            List<AttractionResult> attractions = new ArrayList();
+            while (nearby_attractions.hasNext() && n<3){
+                AttractionResult attraction_info = nearby_attractions.next();
+                attractions.add(attraction_info);
+                n= n + 1;
+            }
+            Iterator<AttractionResult> attractions_iter = attractions.iterator();
+            String result[] = new String[3];
+            int m = 0;
+            while (attractions_iter.hasNext()){
+                AttractionResult attr_result = attractions_iter.next();
+                result[m]=("Attraction Name: " + attr_result.getAttr().getName() + "  \nDistance: " + (long)attr_result.getDistance() + " metres");
+                m = m + 1;
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                    R.layout.whatsherelist, result);
+            setListAdapter(adapter);
 
-        // check if GPS enabled
-        if (gps.canGetLocation()) {
-            double latitude = gps.getLatitude();
-            double longitude = gps.getLongitude();
-            TextView loctext = (TextView) findViewById(R.id.textView4);
-            loctext.setText("latitude :" + latitude + "longitude :" +longitude  );
 
-            }else{
-            // can't get location
-            // GPS or Network is not enabled
-            // Ask user to enable GPS/network in settings
-            gps.showSettingsAlert();
+
         }
 
 
+    }
 
 
 
-}}
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+}
+
+
+
