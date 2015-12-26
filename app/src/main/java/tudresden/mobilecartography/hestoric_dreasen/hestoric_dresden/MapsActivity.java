@@ -33,7 +33,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private SQLiteDatabase db_connection;
 //    private double radius = -1.0;
     private Iterator<Attraction> all_attractions;
-    private HashMap<Attraction, Marker> attraction_marker_map = new HashMap();
+    private HashMap<Marker, Attraction> attraction_marker_map = new HashMap();
 
     protected void onStart() {
         mGoogleApiClient.connect();
@@ -106,13 +106,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         while(iterator.hasNext()){
             HashMap.Entry item = (HashMap.Entry) iterator.next();
             if (query.equals("all") || query.equals("everything")){
-                ((Marker)item.getValue()).setVisible(true);
+                ((Marker)item.getKey()).setVisible(true);
                 continue;
             }
-            if (!((Attraction)item.getKey()).getCategory().matches(pattern)){
-                ((Marker)item.getValue()).setVisible(false);
+            if (!((Attraction)item.getValue()).getCategory().matches(pattern)){
+                ((Marker)item.getKey()).setVisible(false);
             }else{
-                ((Marker)item.getValue()).setVisible(true);
+                ((Marker)item.getKey()).setVisible(true);
             }
         }
     }
@@ -149,6 +149,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setRotateGesturesEnabled(true);
+
+        // add marker onclick callback
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Attraction attraction = attraction_marker_map.get(marker);
+                LogUtils.debug("Attraction " + attraction.getName() + " has " + attraction.getImages());
+                return true;
+            }
+        });
         // Add a marker in current location and move the camera
         updateCurrentMarkerOnMap();
     }
@@ -165,7 +175,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Attraction attraction_info = all_attractions.next();
                 MarkerOptions marker_options = new MarkerOptions().position(new LatLng(attraction_info.getLat(), attraction_info.getLng()))
                         .title(attraction_info.getName());
-                attraction_marker_map.put(attraction_info, mMap.addMarker(marker_options));
+                attraction_marker_map.put(mMap.addMarker(marker_options), attraction_info);
             }
 //            currentLocationMarker = new MarkerOptions().position(currentLocation).title("You are here!");
 //            mMap.addMarker(currentLocationMarker);

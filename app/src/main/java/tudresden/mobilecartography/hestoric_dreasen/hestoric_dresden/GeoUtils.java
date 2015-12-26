@@ -7,6 +7,7 @@ import android.location.Location;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Class that contains utils functions for geo-spatial operations
@@ -39,19 +40,35 @@ public class GeoUtils {
      */
     public static ArrayList<Attraction> get_all_attractions(SQLiteDatabase db_connection){
         Cursor db_cursor;
+        Cursor db_image_cursor;
         ArrayList result = new ArrayList();
         try {
             db_cursor = db_connection.rawQuery("select * from main_data;", null);
             db_cursor.moveToFirst();
             while (!db_cursor.isAfterLast()) {
                 Attraction attraction_info = new Attraction();
-                attraction_info.setName(db_cursor.getString(db_cursor.getColumnIndex("name")));
+                List<AttractionImage> attraction_images = new ArrayList<>();
+                String name = db_cursor.getString(db_cursor.getColumnIndex("name"));
+                attraction_info.setName(name);
                 attraction_info.setLat(db_cursor.getDouble(db_cursor.getColumnIndex("lat")));
                 attraction_info.setLng(db_cursor.getDouble(db_cursor.getColumnIndex("lng")));
                 attraction_info.setDate_of_creation(db_cursor.getString(db_cursor.getColumnIndex("time_of_creation")));
                 attraction_info.setDescription(db_cursor.getString(db_cursor.getColumnIndex("description")));
                 attraction_info.setCategory(db_cursor.getString(db_cursor.getColumnIndex("category")));
+                // get attraction images
+                db_image_cursor = db_connection.rawQuery("select * from image_data where name='"+ name +"'", null);
+                db_image_cursor.moveToFirst();
+                while (!db_image_cursor.isAfterLast()){
+                    AttractionImage attr_image = new AttractionImage();
+                    attr_image.setName(name);
+                    attr_image.setDate(db_image_cursor.getString(db_image_cursor.getColumnIndex("date")));
+                    attr_image.setDescription(db_image_cursor.getString(db_image_cursor.getColumnIndex("description")));
+                    attr_image.setImage_url(db_image_cursor.getString(db_image_cursor.getColumnIndex("image")));
+                    attraction_images.add(attr_image);
+                    db_image_cursor.moveToNext();
+                }
                 db_cursor.moveToNext();
+                attraction_info.setImages(attraction_images);
                 result.add(attraction_info);
             }
         }catch(Exception e){
@@ -88,6 +105,45 @@ public class GeoUtils {
     }
 }
 
+class AttractionImage{
+    private String name;
+    private String image_url;
+    private String date;
+    private String description;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+}
+
 class Attraction {
     private String name;
     private double lat;
@@ -95,6 +151,7 @@ class Attraction {
     private String date_of_creation;
     private String description;
     private String category;
+    private List<AttractionImage> images;
 
     public void setName(String name){
         this.name = name;
@@ -142,6 +199,14 @@ class Attraction {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public List<AttractionImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<AttractionImage> images) {
+        this.images = images;
     }
 }
 
