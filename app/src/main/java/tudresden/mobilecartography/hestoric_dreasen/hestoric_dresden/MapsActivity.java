@@ -2,6 +2,7 @@ package tudresden.mobilecartography.hestoric_dreasen.hestoric_dresden;
 
 import android.annotation.TargetApi;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,9 +16,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.ui.IconGenerator;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -173,7 +176,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // go over the result and create markers, create a function for this later
             while (all_attractions.hasNext()){
                 Attraction attraction_info = all_attractions.next();
-                MarkerOptions marker_options = new MarkerOptions().position(new LatLng(attraction_info.getLat(), attraction_info.getLng()))
+                IconGenerator icon_generator= new IconGenerator(this);
+                icon_generator.setStyle(IconGenerator.STYLE_GREEN);
+                Bitmap bitmap = icon_generator.makeIcon(attraction_info.getName());
+                MarkerOptions marker_options = new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                        .position(new LatLng(attraction_info.getLat(), attraction_info.getLng()))
                         .title(attraction_info.getName());
                 attraction_marker_map.put(mMap.addMarker(marker_options), attraction_info);
             }
