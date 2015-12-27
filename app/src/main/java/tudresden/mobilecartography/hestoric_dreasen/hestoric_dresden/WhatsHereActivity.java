@@ -1,6 +1,7 @@
 package tudresden.mobilecartography.hestoric_dreasen.hestoric_dresden;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
@@ -31,7 +32,7 @@ public class WhatsHereActivity extends ListActivity implements GoogleApiClient.C
     private DatabaseHelper db_helper = new DatabaseHelper(this);
     private SQLiteDatabase db_connection;
     private Cursor db_cursor;
-    private double radius = 5000.0; // 500 meters radius
+    private double radius = 20.0; // 500 meters radius
     TextView latitudeField;
     TextView longitudeField;
 
@@ -78,26 +79,48 @@ public class WhatsHereActivity extends ListActivity implements GoogleApiClient.C
             LatLng currentLocation = new LatLng(current_lat, current_lng);
             // get list of nearby point of interests based on the current location
             Iterator<AttractionResult> nearby_attractions = GeoUtils.get_nearby_attractions(current_lat, current_lng, radius, db_connection).iterator();
-            // go over the result and create markers, create a function for this later
-            int n = 0;
-            List<AttractionResult> attractions = new ArrayList();
-            while (nearby_attractions.hasNext() && n<3){
-                AttractionResult attraction_info = nearby_attractions.next();
-                attractions.add(attraction_info);
-                n= n + 1;
-            }
-            Iterator<AttractionResult> attractions_iter = attractions.iterator();
-            String result[] = new String[3];
-            int m = 0;
-            while (attractions_iter.hasNext()){
-                AttractionResult attr_result = attractions_iter.next();
-                result[m]=("Attraction Name: " + attr_result.getAttr().getName() + "  \nDistance: " + (long)attr_result.getDistance() + " metres");
-                m = m + 1;
-            }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                    R.layout.whatsherelist, result);
-            setListAdapter(adapter);
+            if(nearby_attractions != null) {
+                int n = 0;
+                List<AttractionResult> attractions = new ArrayList();
 
+                while (nearby_attractions.hasNext() && n < 3) {
+                    AttractionResult attraction_info = nearby_attractions.next();
+                    attractions.add(attraction_info);
+                    n = n + 1;
+                }
+                Iterator<AttractionResult> attractions_iter = attractions.iterator();
+                String result[] = new String[3];
+                int m = 0;
+                while (attractions_iter.hasNext()) {
+                    AttractionResult attr_result = attractions_iter.next();
+                    result[m] = ("Attraction Name: " + attr_result.getAttr().getName() + "  \nDistance: " + (long) attr_result.getDistance() + " metres");
+                    m = m + 1;
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                        R.layout.whatsherelist, result);
+                setListAdapter(adapter);
+            }
+            else{
+
+
+                    AlertDialog alertDialog = new AlertDialog.Builder(
+                            WhatsHereActivity.this).create();
+
+                    // Setting Dialog Title
+                    alertDialog.setTitle("Sorry !");
+
+                    // Setting Dialog Message
+                    alertDialog.setMessage("No nearby attractions..");
+
+                    // Setting Icon to Dialog
+                    alertDialog.setIcon(R.drawable.sorry);
+
+
+
+                    // Showing Alert Message
+                    alertDialog.show();
+
+            }
 
 
         }
