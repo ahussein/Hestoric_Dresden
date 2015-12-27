@@ -43,6 +43,7 @@ public class GeoUtils {
         if (all_attractions != null){
             return all_attractions;
         }
+        all_attractions = new ArrayList();
         Cursor db_cursor;
         Cursor db_image_cursor;
         try {
