@@ -13,7 +13,8 @@ import java.util.List;
  * Class that contains utils functions for geo-spatial operations
  */
 public class GeoUtils {
-    static double earth_radius = 6371.0; // in kilometers
+
+    private static ArrayList<Attraction> all_attractions;
 
     /**
      * Calaculates a distance between two points
@@ -39,9 +40,11 @@ public class GeoUtils {
      * @return
      */
     public static ArrayList<Attraction> get_all_attractions(SQLiteDatabase db_connection){
+        if (all_attractions != null){
+            return all_attractions;
+        }
         Cursor db_cursor;
         Cursor db_image_cursor;
-        ArrayList result = new ArrayList();
         try {
             db_cursor = db_connection.rawQuery("select * from main_data;", null);
             db_cursor.moveToFirst();
@@ -69,12 +72,12 @@ public class GeoUtils {
                 }
                 db_cursor.moveToNext();
                 attraction_info.setImages(attraction_images);
-                result.add(attraction_info);
+                all_attractions.add(attraction_info);
             }
         }catch(Exception e){
             LogUtils.error("Failed to get attractions. Reason: " + e.getMessage());
         }
-        return result;
+        return all_attractions;
     }
 
     /**
