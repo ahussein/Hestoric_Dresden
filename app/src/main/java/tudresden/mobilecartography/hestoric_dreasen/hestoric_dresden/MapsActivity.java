@@ -43,6 +43,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static float default_zoom_level = 15;
     private static float zoom_level_threshold = (float) 16.5;
     private static float current_zoom_level = -1;
+    private static int number_of_visible_markers = 0;
+    private static int number_of_labeled_markers_threshold = 10; // if the search result is less than or equal this threshold then we show labeled markers
 
     protected void onStart() {
         mGoogleApiClient.connect();
@@ -110,20 +112,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param query
      */
     private void filter_map_after_search(String query){
+
         String pattern = "(?i).*" + query + ".*"; // match the query category if its anywhere in the category field in the database
         Iterator iterator = attraction_marker_map.entrySet().iterator();
         while(iterator.hasNext()){
             HashMap.Entry item = (HashMap.Entry) iterator.next();
             if (query.equals("all") || query.equals("everything")){
                 ((Marker)item.getKey()).setVisible(true);
+                number_of_visible_markers += 1;
                 continue;
             }
             if (!((Attraction)item.getValue()).getCategory().matches(pattern)){
                 ((Marker)item.getKey()).setVisible(false);
+                number_of_visible_markers -= 1;
             }else{
                 ((Marker)item.getKey()).setVisible(true);
+                number_of_visible_markers += 1;
             }
         }
+        if (number_of_visible_markers <= number_of_labeled_markers_threshold){
+            update_labeled_icons("add");
+        }else if (current_zoom_level < zoom_level_threshold){
+            update_labeled_icons("remove");
+        }
+
     }
 
     @Override
@@ -144,7 +156,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Updates the visible markers on the map whether by adding an icon to the marker or removing it
      * @param operation: if the value is remove then it will remove the icon from the visible markers, if the value is add then it will add an icon to the visible markers
      */
-    private void update_labled_icons(String operation){
+    private void update_labeled_icons(String operation){
         Iterator iterator = attraction_marker_map.entrySet().iterator();
         while(iterator.hasNext()){
             HashMap.Entry<Marker, Attraction> item = (HashMap.Entry) iterator.next();
@@ -194,11 +206,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (current_zoom_level != cameraPosition.zoom){
                     current_zoom_level = cameraPosition.zoom;
                     LogUtils.debug("Current zoom level is:" + cameraPosition.zoom);
-                    if (cameraPosition.zoom >= zoom_level_threshold){
-                        update_labled_icons("add");
-                    }else{
-                        update_labled_icons("remove");
+                    if (number_of_visible_markers <= number_of_labeled_markers_threshold){
+                        update_labeled_icons("add");
+                    }else if (current_zoom_level < zoom_level_threshold){
+                        update_labeled_icons("remove");
                     }
+//                    if (cameraPosition.zoom >= zoom_level_threshold){
+//                        update_labeled_icons("add");
+//                    }else{
+//                        update_labeled_icons("remove");
+//                    }
                 }
             }
         });
@@ -226,14 +243,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // go over the result and create markers, create a function for this later
             while (all_attractions.hasNext()){
                 Attraction attraction_info = all_attractions.next();
-                IconGenerator icon_generator= new IconGenerator(this);
-                icon_generator.setStyle(IconGenerator.STYLE_GREEN);
-                Bitmap bitmap = icon_generator.makeIcon(attraction_info.getName());
-                MarkerOptions marker_options = new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                MarkerOptions marker_options = new MarkerOptions()
                         .position(new LatLng(attraction_info.getLat(), attraction_info.getLng()))
                         .title(attraction_info.getName());
                 attraction_marker_map.put(mMap.addMarker(marker_options), attraction_info);
             }
+            number_of_visible_markers = attraction_marker_map.size();
 //            currentLocationMarker = new MarkerOptions().position(currentLocation).title("You are here!");
 //            mMap.addMarker(currentLocationMarker);
             // move camera to the church of our lady location which will be the center of the view
