@@ -206,7 +206,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (current_zoom_level != cameraPosition.zoom){
                     current_zoom_level = cameraPosition.zoom;
                     LogUtils.debug("Current zoom level is:" + cameraPosition.zoom);
-                    if (number_of_visible_markers <= number_of_labeled_markers_threshold){
+                    if (number_of_visible_markers <= number_of_labeled_markers_threshold || current_zoom_level >= zoom_level_threshold){
                         update_labeled_icons("add");
                     }else if (current_zoom_level < zoom_level_threshold){
                         update_labeled_icons("remove");
