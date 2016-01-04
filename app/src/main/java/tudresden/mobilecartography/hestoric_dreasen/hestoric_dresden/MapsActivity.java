@@ -17,12 +17,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -37,6 +40,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //    private double radius = -1.0;
     private Iterator<Attraction> all_attractions;
     private HashMap<Marker, Attraction> attraction_marker_map = new HashMap();
+    private static float default_zoom_level = 15;
+    private static float zoom_level_threshold = (float) 16.5;
+    private static float current_zoom_level = -1;
 
     protected void onStart() {
         mGoogleApiClient.connect();
@@ -84,16 +90,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void handle_search_view()
     {
         final SearchView search_view = (SearchView) findViewById(R.id.searchView);
-        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query){
+            public boolean onQueryTextSubmit(String query) {
                 filter_map_after_search(query);
                 search_view.clearFocus();
                 return true;
             }
 
             @Override
-            public boolean onQueryTextChange(String new_text){
+            public boolean onQueryTextChange(String new_text) {
                 return true;
             }
         });
@@ -135,6 +141,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /**
+     * Updates the visible markers on the map whether by adding an icon to the marker or removing it
+     * @param operation: if the value is remove then it will remove the icon from the visible markers, if the value is add then it will add an icon to the visible markers
+     */
+    private void update_labled_icons(String operation){
+        Iterator iterator = attraction_marker_map.entrySet().iterator();
+        while(iterator.hasNext()){
+            HashMap.Entry<Marker, Attraction> item = (HashMap.Entry) iterator.next();
+            if (item.getKey().isVisible()){
+                if (operation.equals("remove")) {
+                    item.getKey().setIcon(BitmapDescriptorFactory.defaultMarker());
+                }
+                else if (operation.equals("add")){
+                    IconGenerator icon_generator= new IconGenerator(this);
+                    icon_generator.setStyle(IconGenerator.STYLE_GREEN);
+                    String name = null;
+                    try {
+                        name = URLDecoder.decode(item.getValue().getName(), "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    Bitmap bitmap = icon_generator.makeIcon(name);
+                    item.getKey().setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                }
+            }
+        }
+    }
+
+    /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
      * This is where we can add markers or lines, add listeners or move the camera. In this case,
@@ -152,6 +186,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setRotateGesturesEnabled(true);
+
+        // add zoom level callback handler
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+                if (current_zoom_level != cameraPosition.zoom){
+                    current_zoom_level = cameraPosition.zoom;
+                    LogUtils.debug("Current zoom level is:" + cameraPosition.zoom);
+                    if (cameraPosition.zoom >= zoom_level_threshold){
+                        update_labled_icons("add");
+                    }else{
+                        update_labled_icons("remove");
+                    }
+                }
+            }
+        });
 
         // add marker onclick callback
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -187,7 +237,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //            currentLocationMarker = new MarkerOptions().position(currentLocation).title("You are here!");
 //            mMap.addMarker(currentLocationMarker);
             // move camera to the church of our lady location which will be the center of the view
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.051895, 13.741579), 15));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.051895, 13.741579), default_zoom_level));
         }
     }
 
