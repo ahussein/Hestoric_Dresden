@@ -1,16 +1,14 @@
 package tudresden.mobilecartography.hestoric_dreasen.hestoric_dresden;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ListActivity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -21,9 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import android.app.ListActivity;
-import android.widget.ArrayAdapter;
 
 public class WhatsHereActivity extends ListActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -79,17 +74,17 @@ public class WhatsHereActivity extends ListActivity implements GoogleApiClient.C
             LatLng currentLocation = new LatLng(current_lat, current_lng);
             // get list of nearby point of interests based on the current location
             Iterator<AttractionResult> nearby_attractions = GeoUtils.get_nearby_attractions(current_lat, current_lng, radius, db_connection).iterator();
-            if(nearby_attractions != null) {
-                int n = 0;
-                List<AttractionResult> attractions = new ArrayList();
+            int n = 0;
+            List<AttractionResult> attractions = new ArrayList();
 
-                while (nearby_attractions.hasNext() && n < 3) {
-                    AttractionResult attraction_info = nearby_attractions.next();
-                    attractions.add(attraction_info);
-                    n = n + 1;
-                }
+            while (nearby_attractions.hasNext() && n < 3) {
+                AttractionResult attraction_info = nearby_attractions.next();
+                attractions.add(attraction_info);
+                n = n + 1;
+            }
+            if (n > 0){
                 Iterator<AttractionResult> attractions_iter = attractions.iterator();
-                String result[] = new String[3];
+                String result[] = new String[n];
                 int m = 0;
                 while (attractions_iter.hasNext()) {
                     AttractionResult attr_result = attractions_iter.next();
@@ -99,26 +94,25 @@ public class WhatsHereActivity extends ListActivity implements GoogleApiClient.C
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                         R.layout.whatsherelist, result);
                 setListAdapter(adapter);
-            }
-            else{
+            }else{
 
 
-                    AlertDialog alertDialog = new AlertDialog.Builder(
-                            WhatsHereActivity.this).create();
+                AlertDialog alertDialog = new AlertDialog.Builder(
+                        WhatsHereActivity.this).create();
 
-                    // Setting Dialog Title
-                    alertDialog.setTitle("Sorry !");
+                // Setting Dialog Title
+                alertDialog.setTitle("Sorry !");
 
-                    // Setting Dialog Message
-                    alertDialog.setMessage("No nearby attractions..");
+                // Setting Dialog Message
+                alertDialog.setMessage("No nearby attractions..");
 
-                    // Setting Icon to Dialog
-                    alertDialog.setIcon(R.drawable.sorry);
+                // Setting Icon to Dialog
+                alertDialog.setIcon(R.drawable.sorry);
 
 
 
-                    // Showing Alert Message
-                    alertDialog.show();
+                // Showing Alert Message
+                alertDialog.show();
 
             }
 
