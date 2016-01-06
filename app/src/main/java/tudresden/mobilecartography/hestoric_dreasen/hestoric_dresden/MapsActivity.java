@@ -1,10 +1,13 @@
 package tudresden.mobilecartography.hestoric_dreasen.hestoric_dresden;
 
-import android.database.Cursor;
+import android.annotation.TargetApi;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.widget.SearchView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -13,11 +16,17 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.ui.IconGenerator;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -25,11 +34,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
-    private MarkerOptions currentLocationMarker;
+//    private MarkerOptions currentLocationMarker;
     private DatabaseHelper db_helper = new DatabaseHelper(this);
     private SQLiteDatabase db_connection;
-    private Cursor db_cursor;
-    private int radius = 500; // 500 meters radius
+//    private double radius = -1.0;
+    private Iterator<Attraction> all_attractions;
+    private HashMap<Marker, Attraction> attraction_marker_map = new HashMap();
+    private static float default_zoom_level = 15;
+    private static float zoom_level_threshold = (float) 16.5;
+    private static float current_zoom_level = -1;
+    private static int number_of_visible_markers = 0;
+    private static int number_of_labeled_markers_threshold = 10; // if the search result is less than or equal this threshold then we show labeled markers
 
     protected void onStart() {
         mGoogleApiClient.connect();
@@ -38,14 +53,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try{
             db_helper.createDataBase();
             db_connection = db_helper.getDataBase();
-            db_cursor = db_connection.rawQuery("SELECT name FROM sqlite_master WHERE type='table';", null);
-            db_cursor.moveToFirst();
-            while (! db_cursor.isAfterLast()){
-                LogUtils.debug("Table names:");
-                LogUtils.debug(db_cursor.getString(db_cursor.getColumnIndex("name")));
-                db_cursor.moveToNext();
-            }
-
         }catch(IOException ioe){
             LogUtils.error("Failed to create database");
         }
@@ -74,7 +81,61 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        handle_search_view();
         mapFragment.getMapAsync(this);
+    }
+
+    /**
+     * Handle the search view on the map
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void handle_search_view()
+    {
+        final SearchView search_view = (SearchView) findViewById(R.id.searchView);
+        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filter_map_after_search(query);
+                search_view.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String new_text) {
+                return true;
+            }
+        });
+    }
+
+    /**
+     * Filters the map markers based on the search query
+     * @param query
+     */
+    private void filter_map_after_search(String query){
+
+        String pattern = "(?i).*" + query + ".*"; // match the query category if its anywhere in the category field in the database
+        Iterator iterator = attraction_marker_map.entrySet().iterator();
+        while(iterator.hasNext()){
+            HashMap.Entry item = (HashMap.Entry) iterator.next();
+            if (query.equals("all") || query.equals("everything")){
+                ((Marker)item.getKey()).setVisible(true);
+                number_of_visible_markers += 1;
+                continue;
+            }
+            if (!((Attraction)item.getValue()).getCategory().matches(pattern)){
+                ((Marker)item.getKey()).setVisible(false);
+                number_of_visible_markers -= 1;
+            }else{
+                ((Marker)item.getKey()).setVisible(true);
+                number_of_visible_markers += 1;
+            }
+        }
+        if (number_of_visible_markers <= number_of_labeled_markers_threshold){
+            update_labeled_icons("add");
+        }else if (current_zoom_level < zoom_level_threshold){
+            update_labeled_icons("remove");
+        }
+
     }
 
     @Override
@@ -91,6 +152,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    /**
+     * Updates the visible markers on the map whether by adding an icon to the marker or removing it
+     * @param operation: if the value is remove then it will remove the icon from the visible markers, if the value is add then it will add an icon to the visible markers
+     */
+    private void update_labeled_icons(String operation){
+        Iterator iterator = attraction_marker_map.entrySet().iterator();
+        while(iterator.hasNext()){
+            HashMap.Entry<Marker, Attraction> item = (HashMap.Entry) iterator.next();
+            if (item.getKey().isVisible()){
+                if (operation.equals("remove")) {
+                    item.getKey().setIcon(BitmapDescriptorFactory.defaultMarker());
+                }
+                else if (operation.equals("add")){
+                    IconGenerator icon_generator= new IconGenerator(this);
+                    icon_generator.setStyle(IconGenerator.STYLE_GREEN);
+                    String name = null;
+                    try {
+                        name = URLDecoder.decode(item.getValue().getName(), "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    Bitmap bitmap = icon_generator.makeIcon(name);
+                    item.getKey().setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                }
+            }
+        }
+    }
 
     /**
      * Manipulates the map once available.
@@ -109,58 +197,66 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
-        mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setRotateGesturesEnabled(true);
+
+        // add zoom level callback handler
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+                if (current_zoom_level != cameraPosition.zoom){
+                    current_zoom_level = cameraPosition.zoom;
+                    LogUtils.debug("Current zoom level is:" + cameraPosition.zoom);
+                    if (number_of_visible_markers <= number_of_labeled_markers_threshold || current_zoom_level >= zoom_level_threshold){
+                        update_labeled_icons("add");
+                    }else if (current_zoom_level < zoom_level_threshold){
+                        update_labeled_icons("remove");
+                    }
+//                    if (cameraPosition.zoom >= zoom_level_threshold){
+//                        update_labeled_icons("add");
+//                    }else{
+//                        update_labeled_icons("remove");
+//                    }
+                }
+            }
+        });
+
+        // add marker onclick callback
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Attraction attraction = attraction_marker_map.get(marker);
+                LogUtils.debug("Attraction " + attraction.getName() + " has " + attraction.getImages());
+                return true;
+            }
+        });
         // Add a marker in current location and move the camera
         updateCurrentMarkerOnMap();
     }
 
     private void updateCurrentMarkerOnMap(){
         if (mLastLocation != null && mMap != null) {
-            Double current_lat = mLastLocation.getLatitude();
-            Double current_lng = mLastLocation.getLongitude();
-            LatLng currentLocation = new LatLng(current_lat, current_lng);
+//            Double current_lat = mLastLocation.getLatitude();
+//            Double current_lng = mLastLocation.getLongitude();
+//            LatLng currentLocation = new LatLng(current_lat, current_lng);
             // get list of nearby point of interests based on the current location
-            Iterator<ArrayList> nearby_attractions = get_nearby_attractions(current_lat, current_lng, radius).iterator();
+            all_attractions = GeoUtils.get_all_attractions(db_connection).iterator();
             // go over the result and create markers, create a function for this later
-            while (nearby_attractions.hasNext()){
-                ArrayList attraction_info = nearby_attractions.next();
-                MarkerOptions marker = new MarkerOptions().position(new LatLng((double)attraction_info.get(1), (double) attraction_info.get(2)))
-                        .title((String)attraction_info.get(0));
-                mMap.addMarker(marker);
+            while (all_attractions.hasNext()){
+                Attraction attraction_info = all_attractions.next();
+                MarkerOptions marker_options = new MarkerOptions()
+                        .position(new LatLng(attraction_info.getLat(), attraction_info.getLng()))
+                        .title(attraction_info.getName());
+                attraction_marker_map.put(mMap.addMarker(marker_options), attraction_info);
             }
-            currentLocationMarker = new MarkerOptions().position(currentLocation).title("You are here!");
+            number_of_visible_markers = attraction_marker_map.size();
+//            currentLocationMarker = new MarkerOptions().position(currentLocation).title("You are here!");
 //            mMap.addMarker(currentLocationMarker);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 13));
+            // move camera to the church of our lady location which will be the center of the view
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.051895, 13.741579), default_zoom_level));
         }
     }
 
-    private ArrayList<ArrayList> get_nearby_attractions(Double current_lat, Double current_lng, int radius){
-        /**
-         * Get the nearby attraction according to the current location and the radius
-         */
-        ArrayList result = new ArrayList();
-        try {
-            db_cursor = db_connection.rawQuery("select * from main_data limit 10;", null);
-            db_cursor.moveToFirst();
-            while (!db_cursor.isAfterLast()) {
-                ArrayList attraction_info = new ArrayList();
-                String name = db_cursor.getString(db_cursor.getColumnIndex("name"));
-                Double lat = db_cursor.getDouble(db_cursor.getColumnIndex("lat"));
-                Double lng = db_cursor.getDouble(db_cursor.getColumnIndex("lng"));
-                attraction_info.add(name);
-                attraction_info.add(lat);
-                attraction_info.add(lng);
-                result.add(attraction_info);
-                db_cursor.moveToNext();
-            }
-        }catch(Exception e){
-            LogUtils.error("Failed to get nearby attractions. Reason: " + e.getMessage());
-        }
 
-        return result;
-
-    }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
