@@ -145,7 +145,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             db_cursor.moveToFirst();
             while (!db_cursor.isAfterLast()) {
                 ArrayList attraction_info = new ArrayList();
-                String name = db_cursor.getString(db_cursor.getColumnIndex("Name"));
+                String name = db_cursor.getString(db_cursor.getColumnIndex("name"));
                 Double lat = db_cursor.getDouble(db_cursor.getColumnIndex("lat"));
                 Double lng = db_cursor.getDouble(db_cursor.getColumnIndex("lng"));
                 attraction_info.add(name);
