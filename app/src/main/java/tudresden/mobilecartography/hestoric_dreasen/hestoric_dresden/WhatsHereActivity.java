@@ -1,5 +1,6 @@
 package tudresden.mobilecartography.hestoric_dreasen.hestoric_dresden;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.database.Cursor;
@@ -7,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.appindexing.AppIndex;
@@ -20,17 +22,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class WhatsHereActivity extends ListActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class WhatsHereActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private DatabaseHelper db_helper = new DatabaseHelper(this);
     private SQLiteDatabase db_connection;
     private Cursor db_cursor;
-    private double radius = 20.0; // 500 meters radius
+    private double radius = 20000.0; // 500 meters radius
     TextView latitudeField;
     TextView longitudeField;
-
+    ListView list;
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
@@ -75,6 +77,7 @@ public class WhatsHereActivity extends ListActivity implements GoogleApiClient.C
             // get list of nearby point of interests based on the current location
             Iterator<AttractionResult> nearby_attractions = GeoUtils.get_nearby_attractions(current_lat, current_lng, radius, db_connection).iterator();
             int n = 0;
+
             List<AttractionResult> attractions = new ArrayList();
 
             while (nearby_attractions.hasNext() && n < 3) {
@@ -85,15 +88,23 @@ public class WhatsHereActivity extends ListActivity implements GoogleApiClient.C
             if (n > 0){
                 Iterator<AttractionResult> attractions_iter = attractions.iterator();
                 String result[] = new String[n];
+                String imageurl[] = new String[n];
                 int m = 0;
                 while (attractions_iter.hasNext()) {
                     AttractionResult attr_result = attractions_iter.next();
-                    result[m] = ("Attraction Name: " + attr_result.getAttr().getName() + "  \nDistance: " + (long) attr_result.getDistance() + " metres");
+                    if(attr_result.getAttr().getImages().size() > 0)
+                    {
+                        imageurl[m] = attr_result.getAttr().getImages().get(0).getImage_url() ;
+                    }
+                    else{
+                        imageurl[m] =  "https://tradingnav.com/Content/image/noimage.jpg" ;
+                    }
+                    result[m] = (attr_result.getAttr().getName() + " \n " + (long) attr_result.getDistance()+ " mt");
                     m = m + 1;
                 }
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                        R.layout.whatsherelist, result);
-                setListAdapter(adapter);
+                CustomListAdapter adapter=new CustomListAdapter(this, result, imageurl);
+                list=(ListView)findViewById(R.id.list);
+                list.setAdapter(adapter);
             }else{
 
 

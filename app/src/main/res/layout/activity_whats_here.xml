@@ -18,7 +18,7 @@ android:background="@color/background">
 
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_below="@+id/textView4"
-        android:id="@android:id/list"
+        android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </ListView>
