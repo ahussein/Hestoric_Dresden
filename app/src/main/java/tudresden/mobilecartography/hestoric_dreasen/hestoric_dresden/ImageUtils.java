@@ -70,21 +70,6 @@ public class ImageUtils {
 //                }
             }
         });
-//        URL url = null;
-//        try {
-//            url = new URL(url_string);
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        }
-//        InputStream content = null;
-//        try {
-//            content = (InputStream) url.getContent();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        Drawable drawable;
-//        drawable = Drawable.createFromStream(content, "src");
-//        return drawable;
     }
 
 

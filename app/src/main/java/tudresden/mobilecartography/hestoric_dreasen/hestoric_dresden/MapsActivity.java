@@ -1,6 +1,7 @@
 package tudresden.mobilecartography.hestoric_dreasen.hestoric_dresden;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -180,6 +181,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    void on_marker_click(Marker marker){
+        Attraction attraction = attraction_marker_map.get(marker);
+        LogUtils.debug("Attraction " + attraction.getName() + " has " + attraction.getImages());
+        Intent intent = new Intent(this, ImageViewer.class);
+        intent.putExtra("attraction", attraction);
+        startActivity(intent);
+    }
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -203,12 +212,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-                if (current_zoom_level != cameraPosition.zoom){
+                if (current_zoom_level != cameraPosition.zoom) {
                     current_zoom_level = cameraPosition.zoom;
                     LogUtils.debug("Current zoom level is:" + cameraPosition.zoom);
-                    if (number_of_visible_markers <= number_of_labeled_markers_threshold || current_zoom_level >= zoom_level_threshold){
+                    if (number_of_visible_markers <= number_of_labeled_markers_threshold || current_zoom_level >= zoom_level_threshold) {
                         update_labeled_icons("add");
-                    }else if (current_zoom_level < zoom_level_threshold){
+                    } else if (current_zoom_level < zoom_level_threshold) {
                         update_labeled_icons("remove");
                     }
 //                    if (cameraPosition.zoom >= zoom_level_threshold){
@@ -220,12 +229,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+
         // add marker onclick callback
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Attraction attraction = attraction_marker_map.get(marker);
-                LogUtils.debug("Attraction " + attraction.getName() + " has " + attraction.getImages());
+                on_marker_click(marker);
                 return true;
             }
         });

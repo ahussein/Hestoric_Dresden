@@ -3,6 +3,8 @@ package tudresden.mobilecartography.hestoric_dreasen.hestoric_dresden;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -109,11 +111,48 @@ public class GeoUtils {
     }
 }
 
-class AttractionImage{
-    private String name;
-    private String image_url;
-    private String date;
-    private String description;
+class AttractionImage implements Parcelable{
+    private String name = "";
+    private String image_url = "";
+    private String date = "";
+    private String description = "";
+
+    protected AttractionImage(Parcel in) {
+        name = in.readString();
+        image_url = in.readString();
+        date = in.readString();
+        description = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(image_url);
+        dest.writeString(date);
+        dest.writeString(description);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<AttractionImage> CREATOR = new Parcelable.Creator<AttractionImage>() {
+        @Override
+        public AttractionImage createFromParcel(Parcel in) {
+            return new AttractionImage(in);
+        }
+
+        @Override
+        public AttractionImage[] newArray(int size) {
+            return new AttractionImage[size];
+        }
+    };
+
+    public AttractionImage() {
+
+    }
 
     public String getName() {
         return name;
@@ -146,16 +185,70 @@ class AttractionImage{
     public void setDescription(String description) {
         this.description = description;
     }
+
 }
 
-class Attraction {
-    private String name;
+class Attraction implements Parcelable{
+    private String name = "";
     private double lat;
     private double lng;
-    private String date_of_creation;
-    private String description;
-    private String category;
+    private String date_of_creation = "";
+    private String description = "";
+    private String category = "";
     private List<AttractionImage> images;
+
+    protected Attraction(Parcel in) {
+        name = in.readString();
+        lat = in.readDouble();
+        lng = in.readDouble();
+        date_of_creation = in.readString();
+        description = in.readString();
+        category = in.readString();
+        if (in.readByte() == 0x01) {
+            images = new ArrayList<AttractionImage>();
+            in.readList(images, AttractionImage.class.getClassLoader());
+        } else {
+            images = null;
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeDouble(lat);
+        dest.writeDouble(lng);
+        dest.writeString(date_of_creation);
+        dest.writeString(description);
+        dest.writeString(category);
+        if (images == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(images);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Attraction> CREATOR = new Parcelable.Creator<Attraction>() {
+        @Override
+        public Attraction createFromParcel(Parcel in) {
+            return new Attraction(in);
+        }
+
+        @Override
+        public Attraction[] newArray(int size) {
+            return new Attraction[size];
+        }
+    };
+
+    public Attraction() {
+
+    }
 
     public void setName(String name){
         this.name = name;
@@ -212,6 +305,7 @@ class Attraction {
     public void setImages(List<AttractionImage> images) {
         this.images = images;
     }
+
 }
 
 class AttractionResult implements Comparable<AttractionResult>{
