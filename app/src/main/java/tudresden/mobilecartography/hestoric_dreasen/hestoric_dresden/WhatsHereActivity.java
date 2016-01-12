@@ -2,20 +2,18 @@ package tudresden.mobilecartography.hestoric_dreasen.hestoric_dresden;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ListActivity;
-import android.database.Cursor;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,11 +26,10 @@ public class WhatsHereActivity extends Activity implements GoogleApiClient.Conne
     private Location mLastLocation;
     private DatabaseHelper db_helper = new DatabaseHelper(this);
     private SQLiteDatabase db_connection;
-    private Cursor db_cursor;
     private double radius = 20000.0; // 500 meters radius
-    TextView latitudeField;
-    TextView longitudeField;
+
     ListView list;
+    List<AttractionResult> attractions;
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
@@ -73,12 +70,11 @@ public class WhatsHereActivity extends Activity implements GoogleApiClient.Conne
         if (mLastLocation != null) {
             Double current_lat = mLastLocation.getLatitude();
             Double current_lng = mLastLocation.getLongitude();
-            LatLng currentLocation = new LatLng(current_lat, current_lng);
             // get list of nearby point of interests based on the current location
             Iterator<AttractionResult> nearby_attractions = GeoUtils.get_nearby_attractions(current_lat, current_lng, radius, db_connection).iterator();
             int n = 0;
 
-            List<AttractionResult> attractions = new ArrayList();
+            attractions = new ArrayList<>();
 
             while (nearby_attractions.hasNext() && n < 3) {
                 AttractionResult attraction_info = nearby_attractions.next();
@@ -105,6 +101,19 @@ public class WhatsHereActivity extends Activity implements GoogleApiClient.Conne
                 CustomListAdapter adapter=new CustomListAdapter(this, result, imageurl);
                 list=(ListView)findViewById(R.id.list);
                 list.setAdapter(adapter);
+                list.setOnItemClickListener(new ListView.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> a, View v, int i, long l) {
+
+
+                        Intent intent = new Intent(WhatsHereActivity.this, ImageViewer.class);
+                        intent.putExtra("attraction", attractions.get(i).getAttr());
+                        startActivity(intent);
+                    }
+                });
+
+
             }else{
 
 
