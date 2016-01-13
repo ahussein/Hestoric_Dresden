@@ -18,34 +18,23 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void OverviewActivity(View view) {
-
-        Intent overview = new Intent(this, ButtonNewActivity.class);
-        startActivity(overview);
+        startActivity(new Intent(this, OverviewActivity.class));
     }
 
     //the function that gets the user location
     public void WhatsHereActivity(View view) {
-
-
-        Intent whatshere = new Intent(this, WhatsHereActivity.class);
-        startActivity(whatshere);
+        startActivity(new Intent(this, WhatsHereActivity.class));
     }
 
     public void MapActivity(View view) {
-
-        Intent map = new Intent(this, MapsActivity.class);
-        startActivity(map);
+        startActivity(new Intent(this, MapsActivity.class));
     }
 
     public void ToursActivity(View view) {
-
-        Intent tours = new Intent(this, ToursActivity.class);
-        startActivity(tours);
+        startActivity(new Intent(this, ToursActivity.class));
     }
 
     public void AboutActivity(View view) {
-
-        Intent about = new Intent(this, AboutActivity.class);
-        startActivity(about);
+        startActivity(new Intent(this, AboutActivity.class));
     }
 }
