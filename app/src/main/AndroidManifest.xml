@@ -54,12 +54,7 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
-        <activity
-            android:name=".KataActivity"
-            android:label="@string/title_activity_kata"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
+        
         <activity
             android:name=".NavigationActivity"
             android:label="@string/title_activity_navigation"
