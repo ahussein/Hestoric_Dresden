@@ -71,7 +71,170 @@
                 android:layout_height="wrap_content"
                 android:padding = "5dp"
                 android:layout_below="@id/TextView5"
-                android:src="@drawable/dresden1" />
+                android:src="@drawable/dresden_ma" />
+
+            <TextView
+            android:id="@+id/TextView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@id/ImageView1"
+            android:textColor = "@color/text_color"
+            android:paddingTop="5dp"
+            android:textStyle="bold"
+            android:text = "Augustan Age"/>
+
+            <TextView
+                android:id="@+id/TextView7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@id/TextView6"
+                android:textColor = "@color/text_color"
+                android:paddingTop="5dp"
+                android:text = "In this time Dresden became a city of Baroque. Zwinger, Taschenbergpalais, Japanese Palais, Frauenkirche and summer palace in Pillnitz were built. The first European porcelain manufactory was founded in the city. The population of the city increased to 63,000 in that time."/>
+
+            <TextView
+                android:id="@+id/TextView8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@id/TextView7"
+                android:textColor = "@color/text_color"
+                android:paddingTop="5dp"
+                android:textStyle="bold"
+                android:text = "Napoleonic Age"/>
+
+            <TextView
+                android:id="@+id/TextView9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@id/TextView8"
+                android:textColor = "@color/text_color"
+                android:paddingTop="5dp"
+                android:text = "In 1895, the French army occupied Saxony which became an ally of Napoleon. Napoleon visited Dresden on several occasions. After Napoleon's defeat Dresden was place under Russian-Prussian governorship."/>
+
+            <TextView
+                android:id="@+id/TextView11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@id/TextView9"
+                android:textColor = "@color/text_color"
+                android:paddingTop="5dp"
+                android:textStyle="bold"
+                android:text = "The 19th century"/>
+
+            <TextView
+                android:id="@+id/TextView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@id/TextView11"
+                android:textColor = "@color/text_color"
+                android:paddingTop="5dp"
+                android:text = "Dresden grew rapidly in the 19th century. After the founding of the German Empire, Dresden was its fourth largest city. The industrial branches, such as precision engineering, optics, luxury foods and cigarettes were established."/>
+
+            <ImageView
+                android:id="@+id/ImageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding = "5dp"
+                android:layout_below="@id/TextView12"
+                android:src="@drawable/dresden2" />
+
+            <TextView
+                android:id="@+id/TextView13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@id/ImageView2"
+                android:textColor = "@color/text_color"
+                android:paddingTop="5dp"
+                android:textStyle="bold"
+                android:text = "Dresden between the World Wars"/>
+
+            <TextView
+                android:id="@+id/TextView14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@id/TextView13"
+                android:textColor = "@color/text_color"
+                android:paddingTop="5dp"
+                android:text = "After the first World War the Free State of Saxony was formed. During this time the city had notable architectural and cultural achievements. In 1933 the increasing power of National Socialists ended progressive cultural traditions in the city."/>
+
+            <TextView
+                android:id="@+id/TextView15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@id/TextView14"
+                android:textColor = "@color/text_color"
+                android:paddingTop="5dp"
+                android:textStyle="bold"
+                android:text = "Dresden during the Second World War"/>
+
+            <TextView
+                android:id="@+id/TextView16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@id/TextView15"
+                android:textColor = "@color/text_color"
+                android:paddingTop="5dp"
+                android:text = "Right before the end of the Second World War, the Allies bombed the centre of Dresden and extensive areas of its suburbs. 25,000 people were killed. In May 1945, the Soviet Red Army occupied Dresden."/>
+
+            <TextView
+                android:id="@+id/TextView17"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@id/TextView16"
+                android:textColor = "@color/text_color"
+                android:paddingTop="5dp"
+                android:textStyle="bold"
+                android:text = "Dresden in the GDR"/>
+
+            <TextView
+                android:id="@+id/TextView18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@id/TextView17"
+                android:textColor = "@color/text_color"
+                android:paddingTop="5dp"
+                android:text = "Right after the war the reconstruction of destroyed city began. Some of the important buildings were reconstructed during this time. Dresden became a regional capital of the GDR. Social life in the city was determined by the doctrine of socialist ideology."/>
+
+            <ImageView
+                android:id="@+id/ImageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding = "5dp"
+                android:layout_below="@id/TextView18"
+                android:src="@drawable/dresden3" />
+
+            <TextView
+                android:id="@+id/TextView19"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@id/ImageView3"
+                android:textColor = "@color/text_color"
+                android:paddingTop="5dp"
+                android:textStyle="bold"
+                android:text = "Dresden since 1989"/>
+
+            <TextView
+                android:id="@+id/TextView20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@id/TextView19"
+                android:textColor = "@color/text_color"
+                android:paddingTop="5dp"
+                android:text = "After the German reunification Dresden regained the status of the capital of the Free State of Saxony. Extensive building works are still going on around the city to transform the face of the city."/>
 
         </RelativeLayout>
 </ScrollView>

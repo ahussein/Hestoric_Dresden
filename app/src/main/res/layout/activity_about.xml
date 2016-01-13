@@ -28,29 +28,19 @@
         android:layout_height="wrap_content"
         android:padding = "10dp"
         android:layout_below="@id/TextView1"
-        android:src="@drawable/overview" />
+        android:src="@drawable/abdy" />
 
     <TextView
         android:id="@+id/TextView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:gravity="center"
         android:layout_toRightOf="@id/ImageView1"
         android:layout_below="@id/TextView1"
         android:textColor = "@color/text_color"
-        android:paddingTop="10dp"
+        android:paddingTop="35dp"
         android:textStyle="bold"
         android:text = "Abdelrahman Hussein"/>
-
-    <TextView
-        android:id="@+id/TextView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_toRightOf="@id/ImageView1"
-        android:layout_below="@id/TextView2"
-        android:textColor = "@color/text_color"
-        android:text = "lorem ipsum lorem ipsum"/>
 
     <View
         android:id="@+id/View1"
@@ -68,26 +58,16 @@
         android:src="@drawable/vicky" />
 
     <TextView
-        android:id="@+id/TextView4"
+        android:id="@+id/TextView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:gravity="center"
         android:layout_toRightOf="@id/ImageView2"
         android:layout_below="@id/View1"
         android:textColor = "@color/text_color"
-        android:paddingTop="10dp"
+        android:paddingTop="35dp"
         android:textStyle="bold"
-        android:text = "Vikram V..."/>
-
-    <TextView
-        android:id="@+id/TextView5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_toRightOf="@id/ImageView2"
-        android:textColor = "@color/text_color"
-        android:layout_below="@id/TextView4"
-        android:text = "lorem ipsum lorem ipsum"/>
+        android:text = "Vikram Eswar"/>
 
     <View
         android:id="@+id/View2"
@@ -102,30 +82,19 @@
         android:layout_height="wrap_content"
         android:padding = "10dp"
         android:layout_below="@id/View2"
-        android:src="@drawable/about" />
+        android:src="@drawable/kata" />
 
     <TextView
-        android:id="@+id/TextView6"
+        android:id="@+id/TextView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:gravity="center"
         android:layout_toRightOf="@id/ImageView3"
         android:layout_below="@id/View2"
-        android:paddingTop="10dp"
-        android:paddingBottom="5dp"
+        android:paddingTop="35dp"
         android:textColor = "@color/text_color"
         android:textStyle="bold"
         android:text = "Katalin Joo"/>
-
-    <TextView
-        android:id="@+id/TextView7"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_toRightOf="@id/ImageView3"
-        android:layout_below="@id/TextView6"
-        android:textColor = "@color/text_color"
-        android:text = "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem"/>
 
     <View
         android:id="@+id/View3"
@@ -143,26 +112,16 @@
         android:src="@drawable/ally" />
 
     <TextView
-        android:id="@+id/TextView8"
+        android:id="@+id/TextView5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:gravity="center"
         android:layout_toRightOf="@id/ImageView4"
         android:layout_below="@id/View3"
-        android:paddingTop="10dp"
+        android:paddingTop="35dp"
         android:textColor = "@color/text_color"
         android:textStyle="bold"
         android:text = "Aleksandra Draksler"/>
-
-    <TextView
-        android:id="@+id/TextView9"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_toRightOf="@id/ImageView4"
-        android:layout_below="@id/TextView8"
-        android:textColor = "@color/text_color"
-        android:text = "lorem ipsum lorem ipsum"/>
 
     <View
         android:id="@+id/View4"
