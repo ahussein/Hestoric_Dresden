@@ -163,7 +163,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             HashMap.Entry<Marker, Attraction> item = (HashMap.Entry) iterator.next();
             if (item.getKey().isVisible()){
                 if (operation.equals("remove")) {
-                    item.getKey().setIcon(BitmapDescriptorFactory.defaultMarker());
+                    item.getKey().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
                 }
                 else if (operation.equals("add")){
                     IconGenerator icon_generator= new IconGenerator(this);
