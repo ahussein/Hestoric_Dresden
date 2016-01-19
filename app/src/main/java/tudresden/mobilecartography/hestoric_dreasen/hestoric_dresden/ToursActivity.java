@@ -40,6 +40,7 @@ public class ToursActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTitle("Guided Tours");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tours);
 
