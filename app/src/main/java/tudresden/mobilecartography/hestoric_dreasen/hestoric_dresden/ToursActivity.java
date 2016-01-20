@@ -49,6 +49,8 @@ public class ToursActivity extends AppCompatActivity {
         Icon startIcon = mIconFactory.fromDrawable(mStartIconDrawable);
         Drawable mStopIconDrawable = ContextCompat.getDrawable(this, R.drawable.stop);
         Icon stopIcon = mIconFactory.fromDrawable(mStopIconDrawable);
+        Drawable mMarkerIconDrawable = ContextCompat.getDrawable(this, R.drawable.mapboxmarker);
+        Icon markerIcon = mIconFactory.fromDrawable(mMarkerIconDrawable);
 
 
         /** Create a mapView and give it some properties */
@@ -68,25 +70,27 @@ public class ToursActivity extends AppCompatActivity {
         points_simpleArray.add(new LatLng (51.0520859, 13.736437) ) ;
 
 
-        List<String> title =  Arrays.asList("A", "B", "C", "D","E","F","G");
+        List<String> title =  Arrays.asList("Semperoper", "Katholische Hofkirche", "Brühl's Terrace","Brühlschen Garten","Albertinum","Frauenkirche","Holy Cross Church");
         for(int i = 0; i< points_simpleArray.size(); i++)
         {
             if(i>0 && i<(points_simpleArray.size() - 1)) {
                 mapView.addMarker(new MarkerOptions()
                         .position(points_simpleArray.get(i))
-                        .title(title.get(i-1)));
+                        .title(title.get(i - 1))
+                        .icon(markerIcon)
+                );
             }
             if(i == 0){
                 mapView.addMarker(new MarkerOptions()
                                 .position(points_simpleArray.get(i))
-                                .title("Start")
+                                .title("Zwinger")
                                  .icon(startIcon)
                 );
             }
             if(i== (points_simpleArray.size()-1)){
                 mapView.addMarker(new MarkerOptions()
                         .position(points_simpleArray.get(i))
-                        .title("End")
+                        .title("Dresden Castle")
                         .icon(stopIcon)
                 );
             }
