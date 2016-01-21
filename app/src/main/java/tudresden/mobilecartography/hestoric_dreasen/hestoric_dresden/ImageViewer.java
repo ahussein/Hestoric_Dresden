@@ -9,10 +9,13 @@ public class ImageViewer extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_viewer);
         Intent intent = getIntent();
         Attraction attraction = intent.getParcelableExtra("attraction");
+        setTitle(attraction.getName());
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_image_viewer);
+
+
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         ImageAdapter adapter = new ImageAdapter(this, attraction);
         viewPager.setAdapter(adapter);

@@ -97,7 +97,7 @@ public class WhatsHereActivity extends AppCompatActivity implements GoogleApiCli
                     else{
                         imageurl[m] =  "https://tradingnav.com/Content/image/noimage.jpg" ;
                     }
-                    result[m] = (attr_result.getAttr().getName() + " \n " + (long) attr_result.getDistance()+ " mt");
+                    result[m] = (attr_result.getAttr().getName() + " \n " + (long) attr_result.getDistance()+ " m");
                     m = m + 1;
                 }
                 CustomListAdapter adapter=new CustomListAdapter(this, result, imageurl);
