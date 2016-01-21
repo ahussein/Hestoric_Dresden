@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class WhatsHereActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class WhatsHereActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
@@ -51,6 +52,7 @@ public class WhatsHereActivity extends Activity implements GoogleApiClient.Conne
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTitle("What is here ?");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_whats_here);
         // Create an instance of GoogleAPIClient.

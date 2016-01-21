@@ -27,11 +27,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-
-
-
-
+import java.util.Map;
 
 
 public class ToursActivity extends AppCompatActivity {
@@ -40,6 +38,7 @@ public class ToursActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTitle("Guided Tours");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tours);
 
@@ -48,6 +47,8 @@ public class ToursActivity extends AppCompatActivity {
         Icon startIcon = mIconFactory.fromDrawable(mStartIconDrawable);
         Drawable mStopIconDrawable = ContextCompat.getDrawable(this, R.drawable.stop);
         Icon stopIcon = mIconFactory.fromDrawable(mStopIconDrawable);
+        Drawable mMarkerIconDrawable = ContextCompat.getDrawable(this, R.drawable.mapboxmarker);
+        Icon markerIcon = mIconFactory.fromDrawable(mMarkerIconDrawable);
 
 
         /** Create a mapView and give it some properties */
@@ -55,6 +56,8 @@ public class ToursActivity extends AppCompatActivity {
         mapView.setStyleUrl("https://www.mapbox.com/android-sdk/files/mapbox-raster-v8.json");
         mapView.setCenterCoordinate(new LatLng(51.052132, 13.739489));
         mapView.setZoomLevel(14);
+        Map<String, List <LatLng>> tour_markers_map = new HashMap<>();
+
         List <LatLng> points_simpleArray = new ArrayList ();
         points_simpleArray.add(new LatLng (51.0531004, 13.7340542) ) ;
         points_simpleArray.add(new LatLng (51.0542293, 13.7356479) ) ;
@@ -67,25 +70,27 @@ public class ToursActivity extends AppCompatActivity {
         points_simpleArray.add(new LatLng (51.0520859, 13.736437) ) ;
 
 
-        List<String> title =  Arrays.asList("A", "B", "C", "D","E","F","G");
+        List<String> title =  Arrays.asList("Semperoper", "Katholische Hofkirche", "Brühl's Terrace","Brühlschen Garten","Albertinum","Frauenkirche","Holy Cross Church");
         for(int i = 0; i< points_simpleArray.size(); i++)
         {
             if(i>0 && i<(points_simpleArray.size() - 1)) {
                 mapView.addMarker(new MarkerOptions()
                         .position(points_simpleArray.get(i))
-                        .title(title.get(i-1)));
+                        .title(title.get(i - 1))
+                        .icon(markerIcon)
+                );
             }
             if(i == 0){
                 mapView.addMarker(new MarkerOptions()
                                 .position(points_simpleArray.get(i))
-                                .title("Start")
+                                .title("Zwinger")
                                  .icon(startIcon)
                 );
             }
             if(i== (points_simpleArray.size()-1)){
                 mapView.addMarker(new MarkerOptions()
                         .position(points_simpleArray.get(i))
-                        .title("End")
+                        .title("Dresden Castle")
                         .icon(stopIcon)
                 );
             }

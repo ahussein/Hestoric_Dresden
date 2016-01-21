@@ -21,6 +21,7 @@ android {
 }
 
 repositories {
+    maven { url "http://jzaccone.github.io/SlidingMenu-aar" }
     mavenCentral()
 
 }
@@ -41,4 +42,6 @@ dependencies {
     compile ('com.mapbox.mapboxsdk:mapbox-android-sdk:3.0.0@aar'){
         transitive=true
     }
+    //for the nav bar
+    compile 'com.jeremyfeinstein.slidingmenu:library:1.3@aar'
 }

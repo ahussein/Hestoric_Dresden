@@ -10,6 +10,7 @@ public class AboutActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTitle("Meet the team");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         Intent about = getIntent();

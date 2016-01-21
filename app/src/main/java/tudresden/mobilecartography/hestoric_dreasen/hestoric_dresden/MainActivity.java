@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void ToursActivity(View view) {
-        startActivity(new Intent(this, ToursActivity.class));
+        startActivity(new Intent(this, ToursListActivity.class));
     }
 
     public void AboutActivity(View view) {

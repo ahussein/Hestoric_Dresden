@@ -11,23 +11,19 @@
     android:padding="16dp"
     tools:context="tudresden.mobilecartography.hestoric_dreasen.hestoric_dresden.AboutActivity">
 
-     <TextView
-        android:id="@+id/TextView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <!--    android:layout_height="wrap_content"
          android:paddingBottom="10dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
          android:textColor = "@color/text_color"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text = "Meet the Team"/>
+        android:text = "Meet the Team"/>-->
 
     <ImageView
         android:id="@+id/ImageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding = "10dp"
-        android:layout_below="@id/TextView1"
         android:src="@drawable/abdy" />
 
     <TextView
@@ -36,7 +32,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_toRightOf="@id/ImageView1"
-        android:layout_below="@id/TextView1"
         android:textColor = "@color/text_color"
         android:paddingTop="35dp"
         android:textStyle="bold"
