@@ -41,10 +41,10 @@ public class ToursActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTitle("Guided Tours");
+        Intent intent = getIntent();
+        setTitle(intent.getStringExtra("title"));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tours);
-        Intent intent = getIntent();
         title = intent.getStringExtra("title");
         filename = intent.getStringExtra("filename");
         IconFactory mIconFactory = IconFactory.getInstance(this);
@@ -81,34 +81,34 @@ public class ToursActivity extends AppCompatActivity {
         tour_titles_map.put("General Tour", general_tour_titles);
 
         List <LatLng> church_tour_points = new ArrayList ();
-        general_tour_points.add(new LatLng (51.0522831, 13.7450394) ) ;
-        general_tour_points.add(new LatLng (51.05195270000001, 13.7467555) ) ;
-        general_tour_points.add(new LatLng (51.0489821, 13.7391163) ) ;
-        general_tour_points.add(new LatLng (51.051182, 13.7351195) ) ;
-        general_tour_points.add(new LatLng (51.0538099, 13.7370709) ) ;
-        general_tour_points.add(new LatLng(51.051626, 13.741618)) ;
+        church_tour_points.add(new LatLng (51.0522831, 13.7450394) ) ;
+        church_tour_points.add(new LatLng (51.05195270000001, 13.7467555) ) ;
+        church_tour_points.add(new LatLng (51.0489821, 13.7391163) ) ;
+        church_tour_points.add(new LatLng (51.051182, 13.7351195) ) ;
+        church_tour_points.add(new LatLng (51.0538099, 13.7370709) ) ;
+        church_tour_points.add(new LatLng(51.051626, 13.741618)) ;
         List<String> church_tour_titles =  Arrays.asList("Evangelisch- Reformierte Gemeinde zu Dresden", "Neue Synagoge", "Holy Cross Church",
                 "Busmannkapelle", "Dresden Cathedral", "Frauenkirche");
 
-        tour_markers_map.put("Church Tour", church_tour_points);
-        tour_titles_map.put("Church Tour", church_tour_titles);
+        tour_markers_map.put("Tour of the churches", church_tour_points);
+        tour_titles_map.put("Tour of the churches", church_tour_titles);
 
         List <LatLng> museum_tour_points = new ArrayList ();
-        general_tour_points.add(new LatLng (51.050241, 13.7431273) ) ;
-        general_tour_points.add(new LatLng(51.052216900000005, 13.7448015)) ;
-        general_tour_points.add(new LatLng(51.0526457, 13.7438185)) ;
-        general_tour_points.add(new LatLng (51.0521963, 13.7398583) ) ;
-        general_tour_points.add(new LatLng (51.0523371, 13.7377039) ) ;
-        general_tour_points.add(new LatLng (51.0521531, 13.7361236)) ;
-        general_tour_points.add(new LatLng (51.0531531, 13.7369033) ) ;
-        general_tour_points.add(new LatLng (51.053367, 13.7347288) ) ;
-        general_tour_points.add(new LatLng (51.052513, 13.7337691)) ;
-        general_tour_points.add(new LatLng (51.0531757, 13.7330282)) ;
+        museum_tour_points.add(new LatLng (51.050241, 13.7431273) ) ;
+        museum_tour_points.add(new LatLng(51.052216900000005, 13.7448015)) ;
+        museum_tour_points.add(new LatLng(51.0526457, 13.7438185)) ;
+        museum_tour_points.add(new LatLng (51.0521963, 13.7398583) ) ;
+        museum_tour_points.add(new LatLng (51.0523371, 13.7377039) ) ;
+        museum_tour_points.add(new LatLng (51.0521531, 13.7361236)) ;
+        museum_tour_points.add(new LatLng (51.0531531, 13.7369033) ) ;
+        museum_tour_points.add(new LatLng (51.053367, 13.7347288) ) ;
+        museum_tour_points.add(new LatLng (51.052513, 13.7337691)) ;
+        museum_tour_points.add(new LatLng (51.0531757, 13.7330282)) ;
         List<String> museum_tour_titles =  Arrays.asList("Dresden City Museum", "Albertinum", "Museum Festung Dresden", "Dresden Transport Museum",
                 "Kupferstich-Kabinett", "Türckische Cammer", "Neues Grünes Gewölbe", "Old Masters Picture Gallery", "Porzellansammlung", "Mathematisch-Physikalischer Salon"  );
 
-        tour_markers_map.put("Museum Tour", museum_tour_points);
-        tour_titles_map.put("Museum Tour", museum_tour_titles);
+        tour_markers_map.put("Tour of the museums", museum_tour_points);
+        tour_titles_map.put("Tour of the museums", museum_tour_titles);
 
         List<LatLng> points_simpleArray = tour_markers_map.get(this.title);
         List<String> titles = tour_titles_map.get(this.title);

@@ -1,10 +1,6 @@
 package tudresden.mobilecartography.hestoric_dreasen.hestoric_dresden;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,15 +8,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +26,7 @@ public class ToursListActivity extends AppCompatActivity{
 
 
 
-    void onItemClick(AdapterView<?> a, View v, int i, long l) {
+    void onListItemClick(AdapterView<?> a, View v, int i, long l) {
         Intent intent = new Intent(this, ToursActivity.class);
         TextView title = (TextView) v.findViewById(R.id.title);
         intent.putExtra("title", title.getText().toString());
@@ -81,7 +70,7 @@ public class ToursListActivity extends AppCompatActivity{
 
             @Override
             public void onItemClick(AdapterView<?> a, View v, int i, long l) {
-                onItemClick(a, v, i, l);
+                onListItemClick(a, v, i, l);
             }
         });
     }
