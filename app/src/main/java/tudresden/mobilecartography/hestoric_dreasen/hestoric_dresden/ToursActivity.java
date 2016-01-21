@@ -1,6 +1,7 @@
 package tudresden.mobilecartography.hestoric_dreasen.hestoric_dresden;
 
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 
 
@@ -35,13 +36,17 @@ import java.util.Map;
 public class ToursActivity extends AppCompatActivity {
 
     private MapView mapView = null;
+    String title;
+    String filename;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTitle("Guided Tours");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tours);
-
+        Intent intent = getIntent();
+        title = intent.getStringExtra("title");
+        filename = intent.getStringExtra("filename");
         IconFactory mIconFactory = IconFactory.getInstance(this);
         Drawable mStartIconDrawable = ContextCompat.getDrawable(this, R.drawable.start);
         Icon startIcon = mIconFactory.fromDrawable(mStartIconDrawable);
@@ -57,40 +62,76 @@ public class ToursActivity extends AppCompatActivity {
         mapView.setCenterCoordinate(new LatLng(51.052132, 13.739489));
         mapView.setZoomLevel(14);
         Map<String, List <LatLng>> tour_markers_map = new HashMap<>();
+        Map<String, List<String>> tour_titles_map = new HashMap<>();
 
-        List <LatLng> points_simpleArray = new ArrayList ();
-        points_simpleArray.add(new LatLng (51.0531004, 13.7340542) ) ;
-        points_simpleArray.add(new LatLng (51.0542293, 13.7356479) ) ;
-        points_simpleArray.add(new LatLng (51.0538089, 13.7370684) ) ;
-        points_simpleArray.add(new LatLng (51.0533363, 13.7436782) ) ;
-        points_simpleArray.add(new LatLng (51.0527318, 13.7451036) ) ;
-        points_simpleArray.add(new LatLng (51.0518214, 13.7439931) ) ;
-        points_simpleArray.add(new LatLng (51.051626, 13.741618) ) ;
-        points_simpleArray.add(new LatLng (51.0489821, 13.7391163) ) ;
-        points_simpleArray.add(new LatLng (51.0520859, 13.736437) ) ;
+        List <LatLng> general_tour_points = new ArrayList ();
+        general_tour_points.add(new LatLng (51.0531004, 13.7340542) ) ;
+        general_tour_points.add(new LatLng (51.0542293, 13.7356479) ) ;
+        general_tour_points.add(new LatLng (51.0538089, 13.7370684) ) ;
+        general_tour_points.add(new LatLng (51.0533363, 13.7436782) ) ;
+        general_tour_points.add(new LatLng (51.0527318, 13.7451036) ) ;
+        general_tour_points.add(new LatLng (51.0518214, 13.7439931) ) ;
+        general_tour_points.add(new LatLng(51.051626, 13.741618)) ;
+        general_tour_points.add(new LatLng(51.0489821, 13.7391163)) ;
+        general_tour_points.add(new LatLng(51.0520859, 13.736437)) ;
+        List<String> general_tour_titles =  Arrays.asList("Zwinge", "Semperoper", "Katholische Hofkirche",
+                "Brühl's Terrace","Brühlschen Garten","Albertinum","Frauenkirche","Holy Cross Church", "Dresden Castle");
 
+        tour_markers_map.put("General Tour", general_tour_points);
+        tour_titles_map.put("General Tour", general_tour_titles);
 
-        List<String> title =  Arrays.asList("Semperoper", "Katholische Hofkirche", "Brühl's Terrace","Brühlschen Garten","Albertinum","Frauenkirche","Holy Cross Church");
+        List <LatLng> church_tour_points = new ArrayList ();
+        general_tour_points.add(new LatLng (51.0522831, 13.7450394) ) ;
+        general_tour_points.add(new LatLng (51.05195270000001, 13.7467555) ) ;
+        general_tour_points.add(new LatLng (51.0489821, 13.7391163) ) ;
+        general_tour_points.add(new LatLng (51.051182, 13.7351195) ) ;
+        general_tour_points.add(new LatLng (51.0538099, 13.7370709) ) ;
+        general_tour_points.add(new LatLng(51.051626, 13.741618)) ;
+        List<String> church_tour_titles =  Arrays.asList("Evangelisch- Reformierte Gemeinde zu Dresden", "Neue Synagoge", "Holy Cross Church",
+                "Busmannkapelle", "Dresden Cathedral", "Frauenkirche");
+
+        tour_markers_map.put("Church Tour", church_tour_points);
+        tour_titles_map.put("Church Tour", church_tour_titles);
+
+        List <LatLng> museum_tour_points = new ArrayList ();
+        general_tour_points.add(new LatLng (51.050241, 13.7431273) ) ;
+        general_tour_points.add(new LatLng(51.052216900000005, 13.7448015)) ;
+        general_tour_points.add(new LatLng(51.0526457, 13.7438185)) ;
+        general_tour_points.add(new LatLng (51.0521963, 13.7398583) ) ;
+        general_tour_points.add(new LatLng (51.0523371, 13.7377039) ) ;
+        general_tour_points.add(new LatLng (51.0521531, 13.7361236)) ;
+        general_tour_points.add(new LatLng (51.0531531, 13.7369033) ) ;
+        general_tour_points.add(new LatLng (51.053367, 13.7347288) ) ;
+        general_tour_points.add(new LatLng (51.052513, 13.7337691)) ;
+        general_tour_points.add(new LatLng (51.0531757, 13.7330282)) ;
+        List<String> museum_tour_titles =  Arrays.asList("Dresden City Museum", "Albertinum", "Museum Festung Dresden", "Dresden Transport Museum",
+                "Kupferstich-Kabinett", "Türckische Cammer", "Neues Grünes Gewölbe", "Old Masters Picture Gallery", "Porzellansammlung", "Mathematisch-Physikalischer Salon"  );
+
+        tour_markers_map.put("Museum Tour", museum_tour_points);
+        tour_titles_map.put("Museum Tour", museum_tour_titles);
+
+        List<LatLng> points_simpleArray = tour_markers_map.get(this.title);
+        List<String> titles = tour_titles_map.get(this.title);
         for(int i = 0; i< points_simpleArray.size(); i++)
         {
             if(i>0 && i<(points_simpleArray.size() - 1)) {
                 mapView.addMarker(new MarkerOptions()
                         .position(points_simpleArray.get(i))
-                        .title(title.get(i - 1))
+                        .title(titles.get(i))
                         .icon(markerIcon)
                 );
             }
             if(i == 0){
                 mapView.addMarker(new MarkerOptions()
                                 .position(points_simpleArray.get(i))
-                                .title("Zwinger")
+                                .title(titles.get(i))
                                  .icon(startIcon)
                 );
             }
             if(i== (points_simpleArray.size()-1)){
                 mapView.addMarker(new MarkerOptions()
                         .position(points_simpleArray.get(i))
-                        .title("Dresden Castle")
+                        .title(titles.get(i))
                         .icon(stopIcon)
                 );
             }
@@ -138,6 +179,9 @@ public class ToursActivity extends AppCompatActivity {
         mapView.onSaveInstanceState(outState);
     }
 
+    String getFileName(){
+        return this.filename;
+    }
     private class DrawGeoJSON extends AsyncTask<Void, Void, List<LatLng>> {
         private final String TAG = "";
 
@@ -148,7 +192,7 @@ public class ToursActivity extends AppCompatActivity {
 
             try {
                 // Load GeoJSON file
-                InputStream inputStream = getAssets().open("route.geojson");
+                InputStream inputStream = getAssets().open(getFileName());
                 BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
                 StringBuilder sb = new StringBuilder();
                 int cp;
