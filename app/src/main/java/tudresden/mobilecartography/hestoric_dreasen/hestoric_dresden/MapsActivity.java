@@ -167,7 +167,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 else if (operation.equals("add")){
                     IconGenerator icon_generator= new IconGenerator(this);
-                    icon_generator.setStyle(IconGenerator.STYLE_GREEN);
+                    icon_generator.setStyle(IconGenerator.STYLE_RED);
                     String name = null;
                     try {
                         name = URLDecoder.decode(item.getValue().getName(), "UTF-8");
