@@ -45,20 +45,19 @@ public class ToursListActivity extends AppCompatActivity{
         generalTour.add("General Tour");
         titles[0] = "General Tour";
         generalTour.add("Time: 40 min, Length: 3 km");
-        generalTour.add("This 40 minute round tour leads you through the most important landmarks in the old town of Dresden: " +
-                "Zwinger, Semperoper, Katolische Hofkirche, Brühl's Terrace, Brühlschen Garten, Albertinum, Frauenkirche, " +
-                "Holy Cross Church, Altmarkt, Castle.");
+        generalTour.add("Zwinger, Semperoper, Katolische Hofkirche, Brühl's Terrace, Brühlschen Garten, Albertinum, Frauenkirche, " +
+                "Holy Cross Church, Altmarkt, Castle");
         toursInfo.add(generalTour);
         churchTour.add("Tour of the churches");
         titles[1] = "Tour of the churches";
         churchTour.add("Time: 30 min, Length: 2,3 km");
-        churchTour.add("The tour of the churches guides you through the most important churches in Altstadt: Neue Synagoge," +
+        churchTour.add("Neue Synagoge," +
                 " the Holy Cross Church, Busmannkapelle, the Dresden Cathedral, finishing at the most symbolic church of Dresden, the Frauenkirche.");
         toursInfo.add(churchTour);
         museumTour.add("Tour of the museums");
         titles[2] = "Tour of the museums";
         museumTour.add("Time: 25 min, Length: 2 km");
-        museumTour.add("In this short walking path, you get to know the museums in the most historic part of Dresden: City Museum, " +
+        museumTour.add("City Museum, " +
                 "Albertinum, the Museum Festung, Türkische Cammer, Kupferstich Kabinett, Neues Grünes Gewölbe, " +
                 "three exibitions in Zwinger (Old Masters Picture Gallery, Porzellansammlung, Mathematisch-Physikalischer Salon).");
         toursInfo.add(museumTour);

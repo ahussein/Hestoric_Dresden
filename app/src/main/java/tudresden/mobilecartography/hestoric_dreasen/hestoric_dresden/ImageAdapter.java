@@ -60,7 +60,8 @@ public class ImageAdapter extends PagerAdapter {
         TextView date = (TextView) view_item.findViewById(R.id.date);
         date.setText(attraction_image.getDate());
         TextView description = (TextView) view_item.findViewById(R.id.description);
-        description.setText((!attraction_image.getDescription().equals("")) ? attraction_image.getDescription() : this.attraction.getDescription());
+        String final_description = (!attraction_image.getDescription().equals("")? (attraction_image.getDescription() + "\n\n"): "") + this.attraction.getDescription();
+        description.setText(final_description);
         ((ViewPager) container).addView(view_item, 0);
         return view_item;
     }
