@@ -8,14 +8,6 @@
 
     tools:context="tudresden.mobilecartography.hestoric_dreasen.hestoric_dresden.ToursActivity"
     android:background="@color/background">
-    <!--<TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Guided Tours"
-        android:id="@+id/textView4"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />-->
 
     <com.mapbox.mapboxsdk.views.MapView
         android:id="@+id/mapview"

@@ -1,7 +1,7 @@
 package tudresden.mobilecartography.hestoric_dreasen.hestoric_dresden;
 
 /**
- * Created by Ally on 16.12.2015.
+ * Overrides the default application to change the default font
  */
 public class Application extends android.app.Application {
     @Override

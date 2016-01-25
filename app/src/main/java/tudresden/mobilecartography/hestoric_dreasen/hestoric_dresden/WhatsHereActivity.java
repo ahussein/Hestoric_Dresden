@@ -1,6 +1,5 @@
 package tudresden.mobilecartography.hestoric_dreasen.hestoric_dresden;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -27,7 +26,7 @@ public class WhatsHereActivity extends AppCompatActivity implements GoogleApiCli
     private Location mLastLocation;
     private DatabaseHelper db_helper = new DatabaseHelper(this);
     private SQLiteDatabase db_connection;
-    private double radius = 20000.0; // 500 meters radius
+    private double radius = 200.0; // 200 meters radius
 
     ListView list;
     List<AttractionResult> attractions;
@@ -52,7 +51,7 @@ public class WhatsHereActivity extends AppCompatActivity implements GoogleApiCli
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTitle("What is here ?");
+        setTitle("What is here?");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_whats_here);
         // Create an instance of GoogleAPIClient.
